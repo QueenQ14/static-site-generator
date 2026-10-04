@@ -31,6 +31,9 @@ class TestHTMLNode(unittest.TestCase):
         node2 = HTMLNode(tag="h1",value="woof",props={"target": "_blank"})
         self.assertNotEqual(node.props_to_html(), node2.props_to_html())
 
+    def test_repr(self):
+        node = HTMLNode(tag="p", value="Hello", children=None, props={"class": "paragraph"})
+        self.assertEqual(repr(node), "HTMLNode(p, Hello, None, {'class': 'paragraph'})")
 
 if __name__ == "__main__":
     unittest.main()
