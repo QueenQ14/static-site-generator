@@ -1,1 +1,1 @@
-python3.13 -m unittest discover -s src
+PYTHONPATH=src python3.13 -m unittest discover -s src/tests

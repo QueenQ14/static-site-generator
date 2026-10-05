@@ -1,6 +1,6 @@
 import unittest
-from textnode import TextNode, TextType
-from helper_functions import split_nodes_image, split_nodes_link
+from nodes.textnode import TextNode, TextType
+from functions.helper_functions import split_nodes_image, split_nodes_link
 
 class TestSplitNodesImageLink(unittest.TestCase):
     def test_split_links(self):

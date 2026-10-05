@@ -1,6 +1,6 @@
 import unittest
-from textnode import *
-from htmlnode import *
+from nodes.textnode import *
+from nodes.htmlnode import *
 
 
 class TestTextToHTMLNode(unittest.TestCase):
