@@ -2,7 +2,7 @@ import unittest
 from htmlnode import *
 
 
-class TestTextNode(unittest.TestCase):
+class TestParentNode(unittest.TestCase):
     def test_to_html_with_children(self):
         child_node = LeafNode("span", "child")
         parent_node = ParentNode("div", [child_node])
@@ -80,8 +80,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_repr(self):
         node = ParentNode("div", [LeafNode("b", "bold")], {"class": "container"})
-        # ParentNode doesn't override __repr__, it inherits from HTMLNode
-        self.assertEqual(repr(node), "HTMLNode(div, None, [LeafNode(b, bold, None)], {'class': 'container'})")
+        self.assertEqual(repr(node), "ParentNode(div, children: [LeafNode(b, bold, None)], {'class': 'container'})")
 
 if __name__ == "__main__":
     unittest.main()

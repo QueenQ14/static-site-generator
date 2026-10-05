@@ -33,7 +33,7 @@ class TestHTMLNode(unittest.TestCase):
 
     def test_repr(self):
         node = HTMLNode(tag="p", value="Hello", children=None, props={"class": "paragraph"})
-        self.assertEqual(repr(node), "HTMLNode(p, Hello, None, {'class': 'paragraph'})")
+        self.assertEqual(repr(node), "HTMLNode(p, Hello, children: None, {'class': 'paragraph'})")
 
 if __name__ == "__main__":
     unittest.main()
