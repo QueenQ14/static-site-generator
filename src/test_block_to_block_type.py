@@ -16,12 +16,12 @@ class TestBlockToBlockType(unittest.TestCase):
 
     def test_block_to_block_type_unordered_list(self):
         # Unordered lists can start with -
-        self.assertEqual(block_to_block_type("- item 1\n- item 2"), BlockType.UNORDERED_LIST)
+        self.assertEqual(block_to_block_type("- item 1\n- item 2"), BlockType.ULIST)
         # Unordered lists starting with * are not supported in this app
         self.assertEqual(block_to_block_type("* item 1\n* item 2"), BlockType.PARAGRAPH)
 
     def test_block_to_block_type_ordered_list(self):
-        self.assertEqual(block_to_block_type("1. item 1\n2. item 2\n3. item 3"), BlockType.ORDERED_LIST)
+        self.assertEqual(block_to_block_type("1. item 1\n2. item 2\n3. item 3"), BlockType.OLIST)
 
     def test_block_to_block_type_invalid_ordered_list(self):
         # The numbers must increment exactly by 1 starting from 1
