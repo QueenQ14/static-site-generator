@@ -44,9 +44,27 @@ def generate_page(from_path: str,template_path: str,dest_path: str):
         fw.write(finalized)
     fw.close()
 
+def generate_pages_recursive(content_path,template_path,dest_path):
+    print(f"Generating pages recursively from {content_path} to {dest_path} using {template_path}")
+    abs_content_path = os.path.abspath(content_path)
+    abs_template_path = os.path.abspath(template_path)
+    abs_dest_path = os.path.abspath(dest_path)
+    src = os.listdir(content_path)
+    for path in src:
+        full_src_path = os.path.join(abs_content_path,path)
+        full_dst_path = os.path.join(abs_dest_path,path)
+        is_markdown = path.endswith(".md")
+        if os.path.isfile(full_src_path) and is_markdown:
+            replaced_path = full_dst_path.replace(".md",".html")
+            generate_page(full_src_path,template_path,replaced_path)
+        elif os.path.isdir(full_src_path):
+            os.mkdir(full_dst_path)
+            generate_pages_recursive(full_src_path,template_path,full_dst_path)
+
 def main():
     static_to_public("./static","./public")
-    generate_page("./content/index.md","template.html","./public/index.html")
+    #generate_page("./content/index.md","template.html","./public/index.html")
+    generate_pages_recursive("./content","template.html","./public")
 
 
 main()
