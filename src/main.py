@@ -2,6 +2,7 @@ from nodes.textnode import TextNode,TextType
 import shutil
 import os
 from functions.md_helper_functions import *
+import sys
 
 def static_to_public(src_dir: str, dest_dir: str):
     abs_src_dir = os.path.abspath(src_dir)
@@ -23,8 +24,7 @@ def copytree(abs_src: str,abs_dst: str):
             os.mkdir(full_dst_path)
             copytree(full_src_path,full_dst_path)
 
-def generate_page(from_path: str,template_path: str,dest_path: str):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+def generate_page(from_path: str,template_path: str,dest_path: str,basepath: str):
     abs_from_path = os.path.abspath(from_path)
     abs_template_path = os.path.abspath(template_path)
     abs_dest_path = os.path.abspath(dest_path)
@@ -39,13 +39,14 @@ def generate_page(from_path: str,template_path: str,dest_path: str):
     title = extract_title(markdown)
     title_updated = template.replace(r"{{ Title }}",title)
     finalized = title_updated.replace(r"{{ Content }}",html)
+    finalized = finalized.replace('href="/',f'href="{basepath}')
+    finalized = finalized.replace('src="/',f'src="{basepath}')
 
     with open(abs_dest_path,"w") as fw:
         fw.write(finalized)
     fw.close()
 
-def generate_pages_recursive(content_path,template_path,dest_path):
-    print(f"Generating pages recursively from {content_path} to {dest_path} using {template_path}")
+def generate_pages_recursive(content_path,template_path,dest_path,basepath):
     abs_content_path = os.path.abspath(content_path)
     abs_template_path = os.path.abspath(template_path)
     abs_dest_path = os.path.abspath(dest_path)
@@ -56,15 +57,19 @@ def generate_pages_recursive(content_path,template_path,dest_path):
         is_markdown = path.endswith(".md")
         if os.path.isfile(full_src_path) and is_markdown:
             replaced_path = full_dst_path.replace(".md",".html")
-            generate_page(full_src_path,template_path,replaced_path)
+            generate_page(full_src_path,template_path,replaced_path,basepath)
         elif os.path.isdir(full_src_path):
             os.mkdir(full_dst_path)
-            generate_pages_recursive(full_src_path,template_path,full_dst_path)
+            generate_pages_recursive(full_src_path,template_path,full_dst_path,basepath)
 
 def main():
-    static_to_public("./static","./public")
-    #generate_page("./content/index.md","template.html","./public/index.html")
-    generate_pages_recursive("./content","template.html","./public")
+    args = sys.argv
+    basepath: str = "/"
+    if len(args) > 1:
+        basepath = args[1]
+    print(f"Using basepath: {basepath}")
+    static_to_public("./static","./docs")
+    generate_pages_recursive("./content","template.html","./docs",basepath)
 
 
 main()
