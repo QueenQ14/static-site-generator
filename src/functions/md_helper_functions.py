@@ -103,3 +103,12 @@ def text_to_children(block: str):
     for node in text_nodes:
         children.append(text_node_to_html_node(node))
     return children
+
+def extract_title(markdown: str):
+    blocks = markdown_to_blocks(markdown)
+    title_pattern = r"^(#{1})\s\w+"
+    for block in blocks:
+        if re.findall(title_pattern,block):
+            return block.lstrip("# ").strip()
+
+    raise Exception("Title was NOT found in given markdown")
