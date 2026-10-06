@@ -1,6 +1,7 @@
 from nodes.textnode import TextNode,TextType
 import shutil
 import os
+from functions.md_helper_functions import *
 
 def static_to_public(src_dir: str, dest_dir: str):
     abs_src_dir = os.path.abspath(src_dir)
@@ -22,9 +23,30 @@ def copytree(abs_src: str,abs_dst: str):
             os.mkdir(full_dst_path)
             copytree(full_src_path,full_dst_path)
 
+def generate_page(from_path: str,template_path: str,dest_path: str):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    abs_from_path = os.path.abspath(from_path)
+    abs_template_path = os.path.abspath(template_path)
+    abs_dest_path = os.path.abspath(dest_path)
+    with open(abs_from_path) as f:
+        markdown = f.read()
+    f.close()
+    with open(abs_template_path) as f:
+        template = f.read()
+    f.close()
+    
+    html = markdown_to_html_node(markdown).to_html()
+    title = extract_title(markdown)
+    title_updated = template.replace(r"{{ Title }}",title)
+    finalized = title_updated.replace(r"{{ Content }}",html)
+
+    with open(abs_dest_path,"w") as fw:
+        fw.write(finalized)
+    fw.close()
+
 def main():
-    print(TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev"))
     static_to_public("./static","./public")
+    generate_page("./content/index.md","template.html","./public/index.html")
 
 
 main()
